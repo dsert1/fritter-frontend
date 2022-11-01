@@ -7,6 +7,9 @@ type UserResponse = {
   _id: string;
   username: string;
   dateJoined: string;
+  lastPosted: Date;
+  followers: Array<string>;
+  following: Array<string>;
 };
 
 /**
@@ -35,7 +38,10 @@ const constructUserResponse = (user: HydratedDocument<User>): UserResponse => {
   return {
     ...userCopy,
     _id: userCopy._id.toString(),
-    dateJoined: formatDate(user.dateJoined)
+    dateJoined: formatDate(user.dateJoined),
+    lastPosted: new Date(user.lastPosted),
+    followers: [...userCopy.followers],
+    following: [...userCopy.following]
   };
 };
 

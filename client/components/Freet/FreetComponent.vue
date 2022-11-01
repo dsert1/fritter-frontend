@@ -3,7 +3,7 @@
 
 <template>
   <article
-    class="freet"
+    class="freet card"
   >
     <header>
       <h3 class="author">

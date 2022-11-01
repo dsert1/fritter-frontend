@@ -43,11 +43,16 @@
       <section
         v-if="$store.state.freets.length"
       >
+      <!-- <vue-scrollbox mode="vertical" @scroll="onScroll" @resize="onResize"> -->
+      <div v-scroll="onScroll" class="scrollbox">
         <FreetComponent
           v-for="freet in $store.state.freets"
           :key="freet.id"
           :freet="freet"
+          class="freet"
         />
+      </div>
+      <!-- </vue-scrollbox> -->
       </section>
       <article
         v-else
@@ -59,10 +64,12 @@
 </template>
 
 <script>
+
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
 import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
 
+// Vue.component('vue-scrollbox', VueScrollbox);
 export default {
   name: 'FreetPage',
   components: {FreetComponent, GetFreetsForm, CreateFreetForm},
@@ -92,5 +99,12 @@ section .scrollbox {
   flex: 1 0 50vh;
   padding: 3%;
   overflow-y: scroll;
+  scrollbar-width: thin;          /* "auto" or "thin" */
+  scrollbar-color: blue;
+}
+
+.freet {
+  margin-bottom: 10%;
+  background-color: #F1F1F1;
 }
 </style>

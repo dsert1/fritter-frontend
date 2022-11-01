@@ -11,16 +11,18 @@
       </h1>
     </div>
     <div class="right">
-      <router-link to="/">
+      <router-link to="/" class="button">
         Home
       </router-link>
       <router-link
+        class="button"
         v-if="$store.state.username"
         to="/account"
       >
         Account
       </router-link>
       <router-link
+        class="button"
         v-else
         to="/login"
       >
@@ -42,16 +44,53 @@
 <style scoped>
 nav {
     padding: 1vw 2vw;
-    background-color: #ccc;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
+    background-color: #AADDEC;
 }
 
 .title {
     font-size: 32px;
     margin: 0 5px;
+}
+
+
+/* CSS */
+.button {
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 18px;
+  line-height: 50px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button:hover {
+  background-color: #fff;
+}
+
+.button:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .button-74 {
+    min-width: 120px;
+    padding: 0 25px;
+  }
 }
 
 img {

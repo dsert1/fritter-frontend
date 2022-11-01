@@ -17,17 +17,25 @@ class FreetCollection {
    *
    * @param {string} authorId - The id of the author of the freet
    * @param {string} content - The id of the content of the freet
+   * @param {string} location - the location of the freet
    * @return {Promise<HydratedDocument<Freet>>} - The newly created freet
    */
-  static async addOne(authorId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Freet>> {
+  static async addOne(authorId: Types.ObjectId | string, content: string, location: string): Promise<HydratedDocument<Freet>> {
     const date = new Date();
     const freet = new FreetModel({
       authorId,
       dateCreated: date,
       content,
-      dateModified: date
+      dateModified: date,
+      location,
     });
-    await freet.save(); // Saves freet to MongoDB
+
+    // update last posted time to user
+    const user = await UserCollection.findOneByUserId(authorId);
+    user.lastPosted = new Date(date.getTime());
+    
+    await freet.save();
+    await user.save();
     return freet.populate('authorId');
   }
 
@@ -59,7 +67,7 @@ class FreetCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Freet>>> {
     const author = await UserCollection.findOneByUsername(username);
-    return FreetModel.find({authorId: author._id}).sort({dateModified: -1}).populate('authorId');
+    return FreetModel.find({authorId: author._id}).populate('authorId');
   }
 
   /**

@@ -8,27 +8,6 @@ import * as util from './util';
 const router = express.Router();
 
 /**
- * Get the signed in user
- * TODO: may need better route and documentation
- * (so students don't accidentally delete this when copying over)
- *
- * @name GET /api/users/session
- *
- * @return - currently logged in user, or null if not logged in
- */
-router.get(
-  '/session',
-  [],
-  async (req: Request, res: Response) => {
-    const user = await UserCollection.findOneByUserId(req.session.userId);
-    res.status(200).json({
-      message: 'Your session info was found successfully.',
-      user: user ? util.constructUserResponse(user) : null
-    });
-  }
-);
-
-/**
  * Sign in user.
  *
  * @name POST /api/users/session
@@ -60,6 +39,47 @@ router.post(
       user: util.constructUserResponse(user)
     });
   }
+);
+
+/**
+ * Add a follower to the user.
+ * @name GET /api/users/addFollower
+ *
+ * @param {string} user1 - user one's username
+ * @param {string} user2 - user two's username
+ * @return {UserResponse} - An object with user's details
+ * @throws {400} - If error
+ */
+router.put(
+  '/addFollower',
+  async (req: Request, res: Response) => {
+    await UserCollection.addOneFollower(req.body.user1, req.body.user2);
+    const user1Object = await UserCollection.findOneByUsername(req.body.user1);
+    res.status(200).json(util.constructUserResponse(user1Object));
+  },
+);
+
+
+/**
+ * Get the last posted date of the user
+ * 
+ * @name GET /api/users/getLastPosted
+ *
+ * @param {string} user - the user's username
+ * @return {UserResponse} - An object with user's details
+ * @throws {400} - If error
+ */
+router.get(
+  '/getLastPosted',
+  async (req: Request, res: Response) => {
+    const user = req.query.user;
+    const lastPostedDate = await UserCollection.getLastPosted(user);
+    if (!lastPostedDate) {
+      res.status(400).json("User has never posted.");
+      return;
+    }
+    res.status(200).json(lastPostedDate);
+  },
 );
 
 /**
@@ -118,7 +138,7 @@ router.post(
 /**
  * Update a user's profile.
  *
- * @name PATCH /api/users
+ * @name PUT /api/users
  *
  * @param {string} username - The user's new username
  * @param {string} password - The user's new password
@@ -127,7 +147,7 @@ router.post(
  * @throws {409} - If username already taken
  * @throws {400} - If username or password are not of the correct format
  */
-router.patch(
+router.put(
   '/',
   [
     userValidator.isUserLoggedIn,
