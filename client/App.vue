@@ -13,13 +13,18 @@ import NavBar from '@/components/common/NavBar.vue';
 export default {
   name: 'App',
   components: {NavBar},
-  beforeCreate() {
+  beforeCreate() { // when the webpage is loaded, fetch user
     // Sync stored username to current session
     fetch('/api/users/session', {
       credentials: 'same-origin' // Sends express-session credentials with request
     }).then(res => res.json()).then(res => {
+      console.log(res);
       const user = res.user;
+      console.log(user);
+      // this.$store.commit('setUser', user);
       this.$store.commit('setUsername', user ? user.username : null);
+      this.$store.commit('setFollowers', user ? user.followers : null);
+      this.$store.commit('setFollowing', user ? user.following : null);
     });
 
     // Clear alerts on page refresh

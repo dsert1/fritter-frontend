@@ -46,8 +46,29 @@ class UserCollection {
    static async addOneFollower(user1: string, user2: string): Promise<void> {
     const user1Object = await this.findOneByUsername(user1);
     const user2Object = await this.findOneByUsername(user2);
-    user1Object.followers.push(user2);
-    user2Object.following.push(user1);
+    if (!user1Object.followers.includes(user2)) {
+      user1Object.followers.push(user2);
+    }
+    if (!user2Object.following.includes(user1)) {
+      user2Object.following.push(user1);
+    }
+
+    await user1Object.save();
+    await user2Object.save();
+  }
+
+  /**
+   * Makes it so that user 2 follows user 1
+   *
+   * @param {string} user1 - The username of the user1
+   * @param {string} user2 - The username of the user2
+   * @return {Promise<HydratedDocument<User>>} - The newly created user
+   */
+   static async removeOneFollower(user1: string, user2: string): Promise<void> {
+    const user1Object = await this.findOneByUsername(user1);
+    const user2Object = await this.findOneByUsername(user2);
+    user1Object.followers = user1Object.followers.filter(u => u != user2)
+    user2Object.following = user2Object.following.filter(u => u != user1);
 
     await user1Object.save();
     await user2Object.save();

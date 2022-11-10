@@ -37,6 +37,7 @@
             value="author"
             placeholder="🔍 Filter by author (optional)"
             button="🔄 Get freets"
+            class="searchBox"
           />
         </div>
       </header>
@@ -44,7 +45,7 @@
         v-if="$store.state.freets.length"
       >
       <!-- <vue-scrollbox mode="vertical" @scroll="onScroll" @resize="onResize"> -->
-      <div v-scroll="onScroll" class="scrollbox">
+      <div class="scrollbox">
         <FreetComponent
           v-for="freet in $store.state.freets"
           :key="freet.id"
@@ -83,6 +84,14 @@ export default {
 section {
   display: flex;
   flex-direction: column;
+}
+
+.searchBox {
+  position: relative;
+  border: 2px solid #cdcdcd;
+  border-color: rgba(0, 0, 0, .14);
+  background-color: AliceBlue;
+  font-size: 14px;
 }
 
 header, header > * {

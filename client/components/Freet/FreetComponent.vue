@@ -1,6 +1,15 @@
 <!-- Reusable component representing a single freet and its actions -->
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
-
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css"
+     integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14="
+     crossorigin=""/>
+</head>
+<!-- @import "~leaflet/dist/leaflet.css"; -->
+<!-- <script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js"
+     integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg="
+     crossorigin=""> -->
+</script>
 <template>
   <article
     class="freet card"
@@ -52,6 +61,10 @@
       Posted at {{ freet.dateModified }}
       <i v-if="freet.edited">(edited)</i>
     </p>
+    <p class="info">
+      Posted from {{ freet.location }}
+      <i v-if="freet.edited">(edited)</i>
+    </p>
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -65,6 +78,25 @@
 </template>
 
 <script>
+// import { LMap, LTileLayer, LMarker } from "vue2-leaflet";
+// import * as Vue2Leaflet from 'vue2-leaflet'; // VALID
+// import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+// import Vue from 'vue';
+// import 'leaflet/dist/leaflet.css';
+// import { Icon } from 'leaflet';
+// Vue.component('l-map', LMap);
+// Vue.component('l-tile-layer', LTileLayer);
+// Vue.component('l-marker', LMarker);
+
+// Icon.Default.mergeOptions({
+//   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+//   iconUrl: require('leaflet/dist/images/marker-icon.png'),
+//   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+// });
+// const vmap = Vue.component('v-map', LMap);
+// const vtilelayer = Vue.component('v-tilelayer', LTileLayer);
+// const vmarker = Vue.component('v-marker', LMarker);
+// new Vue({ el: '#app'});
 export default {
   name: 'FreetComponent',
   props: {
@@ -75,6 +107,17 @@ export default {
     }
   },
   data() {
+  //   console.log(LMap);
+  //   var map = L.map('map').setView([51.505, -0.09], 13);
+  //     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  //     maxZoom: 19,
+  //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  // }).addTo(map);
+  //   return {
+  //     thisMap: map
+  //   }
+
+
     return {
       editing: false, // Whether or not this freet is in edit mode
       draft: this.freet.content, // Potentially-new content for this freet
@@ -172,4 +215,15 @@ export default {
     padding: 20px;
     position: relative;
 }
+
+.actions button {
+  background-color: white;
+  color: black;
+  position: relative;
+  border-radius: 14px;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+#map { height: 180px; }
 </style>

@@ -8,6 +8,44 @@ import * as util from './util';
 const router = express.Router();
 
 /**
+ * Get the signed in user
+ *
+ * @name GET /api/users/session
+ *
+ * @return - currently logged in user, or null if not logged in
+ */
+ router.get(
+  '/session',
+  [],
+  async (req: Request, res: Response) => {
+    const user = await UserCollection.findOneByUserId(req.session.userId);
+    res.status(200).json({
+      message: 'Your session info was found successfully.',
+      user: user ? util.constructUserResponse(user) : null
+    });
+  }
+);
+
+/**
+ * Gets all users in the database
+ *
+ * @name GET /api/users/session
+ *
+ * @return - currently logged in user, or null if not logged in
+ */
+ router.get(
+  '/getAllUsers',
+  [],
+  async (req: Request, res: Response) => {
+    const users = await UserCollection.findAll();
+    res.status(200).json({
+      message: 'Your session info was found successfully.',
+      users: users.map(u => util.constructUserResponse(u))
+    });
+  }
+);
+
+/**
  * Sign in user.
  *
  * @name POST /api/users/session
@@ -30,6 +68,7 @@ router.post(
     userValidator.isAccountExists
   ],
   async (req: Request, res: Response) => {
+    console.log("Made it to router.opst (/session) line 33");
     const user = await UserCollection.findOneByUsernameAndPassword(
       req.body.username, req.body.password
     );
@@ -40,6 +79,28 @@ router.post(
     });
   }
 );
+
+// router.get(
+//   '/session',
+//   [
+//     userValidator.isUserLoggedOut,
+//     userValidator.isValidUsername,
+//     userValidator.isValidPassword,
+//     userValidator.isAccountExists
+//   ],
+//   async (req: Request, res: Response) => {
+//     console.log("Made it to router.get (/session) line 33");
+//     console.log(req);
+//     const user = await UserCollection.findOneByUsernameAndPassword(
+//       req.body.username, req.body.password
+//     );
+//     req.session.userId = user._id.toString();
+//     res.status(201).json({
+//       message: 'You have logged in successfully',
+//       user: util.constructUserResponse(user)
+//     });
+//   }
+// );
 
 /**
  * Add a follower to the user.
@@ -53,7 +114,25 @@ router.post(
 router.put(
   '/addFollower',
   async (req: Request, res: Response) => {
-    await UserCollection.addOneFollower(req.body.user1, req.body.user2);
+    await UserCollection.addOneFollower(req.body.user2, req.body.user1);
+    const user1Object = await UserCollection.findOneByUsername(req.body.user1);
+    res.status(200).json(util.constructUserResponse(user1Object));
+  },
+);
+
+/**
+ * Add a follower to the user.
+ * @name GET /api/users/addFollower
+ *
+ * @param {string} user1 - user one's username
+ * @param {string} user2 - user two's username
+ * @return {UserResponse} - An object with user's details
+ * @throws {400} - If error
+ */
+ router.put(
+  '/removeFollower',
+  async (req: Request, res: Response) => {
+    await UserCollection.removeOneFollower(req.body.user2, req.body.user1);
     const user1Object = await UserCollection.findOneByUsername(req.body.user1);
     res.status(200).json(util.constructUserResponse(user1Object));
   },

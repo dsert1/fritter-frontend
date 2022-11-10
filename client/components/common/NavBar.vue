@@ -14,6 +14,12 @@
       <router-link to="/" class="button">
         Home
       </router-link>
+      <router-link to="/profile" class="button">
+        Profile
+      </router-link>
+      <router-link to="/rec_followers" class="button">
+        Recommended Followers
+      </router-link>
       <router-link
         class="button"
         v-if="$store.state.username"
@@ -48,7 +54,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    background-color: #AADDEC;
+    background-color: #91ffb7;
 }
 
 .title {
